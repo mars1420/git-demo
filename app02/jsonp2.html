@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn1">按钮1发送非同源请求</button>
+    <button id="btn2">按钮2发送非同源请求</button>
+    <script>
+        document.querySelector('#btn1').onclick = function() {
+            jsonp({
+                url: "http://localhost:9009/testapp3",
+                success: function(obj) {
+                    console.log('执行了按钮1下的success下的匿名函数');
+                    console.log(obj);
+                }
+            })
+        }
+        document.querySelector('#btn2').onclick = function() {
+            jsonp({
+                url: "http://localhost:9009/testapp3",
+                success: function(obj) {
+                    console.log('执行按钮2下的success下的匿名函数');
+                    console.log(obj);
+                }
+            });
+        };
+
+        function jsonp(props) {
+            var mysrc = document.createElement('script');
+            window.fn = props.success;
+            mysrc.src = props.url + "?callback=fn";
+            document.body.appendChild(mysrc);
+            mysrc.onload = function() {
+                document.body.removeChild(mysrc);
+            }
+        }
+    </script>
+</body>
+
+</html>

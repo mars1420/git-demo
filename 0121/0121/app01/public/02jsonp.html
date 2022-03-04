@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 
+        ajax请求存在非同源的问题；服务器a是无法访问服务器b里面的资源
+        jsonp提出了一个解决方式，但是jsonp不是ajax的请求
+        script 标签的src属性是不存在非同源问题的
+        <script src=“https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+        localhost：9000可以引入当前非同源下的资源文件
+        src访问的地址返回的资源一定是一个合法的正常的js代码
+        这种最原始，最底层的jsonp的方式是需要前端开发人员和后端开发人员提前沟通好，写的函数要保持一致
+     -->
+    <!-- src="http://localhost:9009/testapp" 这里写的地址就是非同源的服务器资源地址 -->
+    <script>
+        //要先声明这么一个fn的函数
+        function fn(obj) {
+            console.log('当前页面的fn函数被调用了');
+            //如果obj能正常输出，说明localhost:9000下得到localhost:9009的数据
+            console.log(obj);
+        }
+    </script>
+    <!--   返回的字符串  fn({name:'张三',uage:18}) -->
+    <script src="http://localhost:9009/testapp"></script>
+    <script>
+        // 实现参数传递，并调用当前页面的自定义的全局的函数
+        fn({
+            name: '张三',
+            uage: 18
+        });
+    </script>
+    <!-- 练习：最原始的jsonp访问非同源资源-->
+
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- 之前的操作都是页面一加载的时候就发送了请求：一个按钮的点击事件的时候再去发送请求 -->
+    <button>点击发送非同源请求</button>
+    <script>
+        function myjsonp(obj) {
+            console.log(obj);
+        }
+        document.querySelector("button").onclick = function() {
+            //<script src="http://localhost:9009/testapp2?callback=myjsonp">
+            //点击事件发生了之后再去创建一个script标签
+
+            var mysrc = document.createElement('script');
+            mysrc.src = "http://localhost:9009/testapp2?callback=myjsonp";
+            //这句代码会给页面添加很多冗余的代码
+            document.body.appendChild(mysrc);
+            //当script标签加载完成之后，运行完成之后，body移除这个标签
+            //onload事件来监听当前的script标签是否已经加载完成
+            mysrc.onload = function() {
+                //从body里面移除当前的标签
+                document.body.removeChild(mysrc);
+            }
+        };
+    </script>
+</body>
+
+</html>

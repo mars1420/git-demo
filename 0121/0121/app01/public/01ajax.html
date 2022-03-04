@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/ajax.js"></script>
+
+</head>
+
+<body>
+    <script>
+        //业务是：从localhost：9000下的html通过ajax去访问localhost:9009下的testapp这个资源地址
+        //非同源请求
+        ajax({
+            //现在我们访问的是另外一个服务器里面的资源地址
+            url: "http://localhost:9009/testapp",
+            type: 'get',
+            success: function(text) {
+                console.log(text);
+            }
+        });
+    </script>
+</body>
+
+</html>

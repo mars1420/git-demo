@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //创建一个全局的函数，方便后续的scriptsrc的返回的函数的调用
+        //将当前的自定义的函数的名字，当做是一个参数传递到服务器，服务器根据传递的参数再返回
+        function myjsonp(obj) {
+            console.log(obj);
+        }
+    </script>
+    <!-- 前端和后端的沟通好，统一一个参数名：callback -->
+    <script src="http://localhost:9009/testapp2?callback=myjsonp"></script>
+</body>
+
+</html>

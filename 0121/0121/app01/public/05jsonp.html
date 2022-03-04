@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <button>点击发送非同源请求</button>
+    <script>
+        // function myjsonp(obj) {
+        //     console.log(obj);
+
+        // }
+        // myjsonp=function(obj){
+        //     console.log(obj);            
+        // }
+        document.querySelector('button').onclick = function() {
+            jsonp({
+                url: "http://localhost:9009/testapp2",
+                success: function(obj) {
+                    console.log('执行了success下的匿名函数');
+                    console.log(obj);
+                }
+            });
+        };
+
+        function jsonp(props) {
+            //点击发送，第一步就是去创建一个script标签
+            //动态的创建script标签
+            var mysrc = document.createElement("script");
+            //props里面的这个success这个函数不是全局的
+            //myjsonp就变成了window下的一个全局的属性
+            //props.success 是一个局部的函数
+            //window.myjsonp 将这个匿名的局部的函数变成全局的函数
+            window.fn = props.success;
+            mysrc.src = props.url + "?callback=fn";
+            document.body.appendChild(mysrc);
+            //加载完成之后，移除标签
+            mysrc.onload = function() {
+                document.body.removeChild(mysrc);
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

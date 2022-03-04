@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/jsonp.js"></script>
+    <script src="js/template-web.js"></script>
+    <style>
+        td {
+            text-align: center;
+        }
+        
+        div {
+            width: 500px;
+            margin: 0px auto;
+        }
+        
+        div ul {
+            list-style: none;
+            display: flex;
+            margin: 0px;
+            padding: 0px;
+        }
+        
+        div ul li {
+            border: 1px sandybrown solid;
+        }
+    </style>
+</head>
+
+<body>
+    <table align="center" border="1" width="500px">
+        <caption>江西省宜春市未来48小时天气预报</caption>
+        <thead>
+            <th>时间</th>
+            <th>天气</th>
+            <th>温度</th>
+            <th>风向</th>
+            <th>风力</th>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <div>
+        <h3>江西省宜春市未来7天天气预报</h3>
+        <ul>
+
+        </ul>
+    </div>
+
+</body>
+<script type="text/html" id="weather">
+    {{each forecast}}
+    <td>{{mydate($value.update_time)}}</td>
+    <td>{{$value.weather}}</td>
+    <td>{{$value.degree}}°</td>
+    <td>{{$value.wind_direction}}</td>
+    <td>{{$value.wind_power}}</td>
+    {{/each}}
+</script>
+<script type="text/html" id="weather7">
+    {{each forecast}}
+    <li>
+        <p>{{$value.time}}</p>
+        <p>{{$value.day_weather}}</p>
+        <p>最高{{$value.max_degree}}°</p>
+        <p>最低{{$value.min_degree}}°</p>
+        <p>{{$value.day_wind_direction}}-{{$value.day_wind_power}}级</p>
+    </li>
+    {{/each}}
+</script>
+<script>
+    function mydate(mytime) {
+        var year = mytime.substr(0, 4);
+        var month = mytime.substr(4, 2);
+        var day = mytime.substr(6, 2);
+        var hour = mytime.substr(8, 2);
+        return year + "-" + month + "-" + day + " " + hour + "时";
+    }
+    template.defaults.imports.mydate = mydate;
+    jsonp({
+        url: "https://wis.qq.com/weather/common",
+        data: {
+            source: 'pc',
+            weather_type: "forecast_1h|forecast_24h",
+            province: "江西省",
+            city: "宜春市"
+        },
+        success: function(res) {
+            var html = template("weather", {
+                forecast: res.data.forecast_1h
+            });
+            document.querySelector('tbody').innerHTML = html;
+            var ulhtml = template("weather7", {
+                forecast: res.data.forecast_24h
+            });
+            document.querySelector('ul').innerHTML = ulhtml;
+        }
+    })
+</script>
+
+</html>

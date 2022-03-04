@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="btn1">按钮1发送非同源请求</button>
+    <button id="btn2">按钮2发送非同源请求</button>
+    <script>
+        // function myjsonp(obj) {
+        //     console.log(obj);
+
+        // }
+        // myjsonp=function(obj){
+        //     console.log(obj);            
+        // }
+        //问题出现了：当同一个页面有多个相同的非同源资源访问的请求时，后面的fn函数会把前面的fn的函数给覆盖
+        //所有的请求都会执行最后一次的fn函数
+        document.querySelector('#btn1').onclick = function() {
+            jsonp({
+                url: "http://localhost:9009/testapp3",
+                success: function(obj) {
+                    console.log('执行了按钮1下的success下的匿名函数');
+                    console.log(obj);
+                }
+            });
+        };
+        document.querySelector('#btn2').onclick = function() {
+            jsonp({
+                url: "http://localhost:9009/testapp3",
+                success: function(obj) {
+                    console.log('执行按钮2下的success下的匿名函数');
+                    console.log(obj);
+                }
+            });
+        };
+
+        function jsonp(props) {
+            //点击发送，第一步就是去创建一个script标签
+            //动态的创建script标签
+            var mysrc = document.createElement("script");
+            //props里面的这个success这个函数不是全局的
+            //myjsonp就变成了window下的一个全局的属性
+            //props.success 是一个局部的函数
+            //window.myjsonp 将这个匿名的局部的函数变成全局的函数
+            //当有多次非同源的请求的时候，将window的这个全局的属性的命名变成一个随机的
+            // 待遇等于0但是小于1的一个小数  0.123456789   myjsonp0123456789
+            var fn = "myjsonp" + Math.random().toString().replace(".", "");
+            //fn不再是固定的名称而是一个变量
+            //window.fn = props.success;
+            window[fn] = props.success;
+            mysrc.src = props.url + "?callback=" + fn;
+            console.log(fn);
+            document.body.appendChild(mysrc);
+            //加载完成之后，移除标签
+            mysrc.onload = function() {
+                document.body.removeChild(mysrc);
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>
